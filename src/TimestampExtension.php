@@ -5,20 +5,37 @@ namespace Thunbolt\Doctrine\DI;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Nette\DI\CompilerExtension;
-use Thunbolt\Doctrine\Timestamp;
+use Thunbolt\Doctrine\Traits\Timestamp;
 use Thunbolt\Doctrine\TimestampException;
 use Thunbolt\Doctrine\TimestampSubscriber;
+use Thunbolt\Doctrine\Traits\TimestampCreated;
+use Thunbolt\Doctrine\Traits\TimestampUpdated;
 
 class TimestampExtension extends CompilerExtension {
 
 	/** @var array */
 	public $defaults = [
 		'subscriber' => TimestampSubscriber::class,
-		'updateField' => 'updated',
-		'createField' => 'created',
-		'trait' => Timestamp::class,
-		'recursive' => FALSE,
-		'method' => 'updateTimestamp',
+		'fields' => [
+			'main' => ['updated', 'created'],
+			'created' => ['created'],
+			'updated' => ['updated'],
+		],
+		'traits' => [
+			'main' => Timestamp::class,
+			'created' => TimestampCreated::class,
+			'updated' => TimestampUpdated::class,
+		],
+		'methods' => [
+			'main' => 'updateTimestamp',
+			'created' => 'updateCreated',
+			'updated' => 'updateUpdated',
+		],
+		'events' => [
+			'main' => [Events::preUpdate, Events::prePersist],
+			'created' => [Events::prePersist],
+			'updated' => [Events::preUpdate, Events::prePersist],
+		]
 	];
 	
 	public function loadConfiguration() {
@@ -31,9 +48,9 @@ class TimestampExtension extends CompilerExtension {
 		$builder->addDefinition($this->prefix('subscriber'))
 			->setClass($config['subscriber'], [
 				[$config['updateField'], $config['createField']],
-				$config['trait'],
-				$config['method'],
-				$config['recursive'],
+				$config['traits'],
+				$config['methods'],
+				$config['events'],
 			]);
 	}
 

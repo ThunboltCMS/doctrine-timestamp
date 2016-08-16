@@ -7,6 +7,8 @@ extensions:
     - Thunbolt\Doctrine\DI\TimestampExtension
 ```
 
+For created and updated fields:
+
 ```php
 
 /**
@@ -14,8 +16,34 @@ extensions:
  */
 class Entity {
 
-    use Thunbolt\Doctrine\Timestamp;
+    use Thunbolt\Doctrine\Traits\Timestamp;
 
 }
 
+```
+
+For created:
+
+```php
+/**
+ * @ORM\Entity()
+ */
+class Entity {
+
+    use Thunbolt\Doctrine\Traits\TimestampCreated;
+
+}
+```
+
+For updated:
+
+```php
+/**
+ * @ORM\Entity()
+ */
+class Entity {
+
+    use Thunbolt\Doctrine\Traits\TimestampUpdated;
+
+}
 ```

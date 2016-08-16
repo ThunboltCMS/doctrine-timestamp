@@ -3,33 +3,32 @@
 namespace Thunbolt\Doctrine;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Events;
 
 class TimestampSubscriber {
 
 	/** @var array */
-	private $fields;
+	private $fields = [];
 
-	/** @var string */
-	private $trait;
+	/** @var array */
+	private $traits = [];
 
-	/** @var bool */
-	private $recursive;
+	/** @var array */
+	private $methods = [];
 
-	/** @var string */
-	private $method;
+	/** @var array */
+	private $events;
 
 	/**
 	 * @param array $fields
-	 * @param string $trait
-	 * @param string $method
-	 * @param bool $recursive
+	 * @param array $traits
+	 * @param array $methods
+	 * @param array $events
 	 */
-	public function __construct(array $fields, $trait, $method, $recursive = FALSE) {
+	public function __construct(array $fields, array $traits, array $methods, array $events) {
 		$this->fields = $fields;
-		$this->trait = $trait;
-		$this->recursive = $recursive;
-		$this->method = $method;
+		$this->traits = $traits;
+		$this->methods = $methods;
+		$this->events = $events;
 	}
 
 	/**
@@ -37,40 +36,24 @@ class TimestampSubscriber {
 	 */
 	public function loadClassMetadata(LoadClassMetadataEventArgs $args) {
 		$metadata = $args->getClassMetadata();
+		$metadataTraits = class_uses($metadata->getName());
 
-		if ($this->hasTrait($metadata->getName())) {
-			$metadata->addLifecycleCallback($this->method, Events::prePersist);
-			$metadata->addLifecycleCallback($this->method, Events::preUpdate);
-
-			foreach ($this->fields as $field) {
-				if (!$metadata->hasField($field)) {
-					$metadata->mapField(array(
-						'fieldName' => $field,
-						'type' => 'datetime',
-						'nullable' => TRUE,
-					));
+		foreach ($this->traits as $category => $trait) {
+			if (isset($metadataTraits[$trait])) {
+				foreach ($this->events[$category] as $event) {
+					$metadata->addLifecycleCallback($this->methods[$category], $event);
+				}
+				foreach ($this->fields[$category] as $field) {
+					if (!$metadata->hasField($field)) {
+						$metadata->mapField(array(
+							'fieldName' => $field,
+							'type' => 'datetime',
+							'nullable' => TRUE,
+						));
+					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * @param string $class
-	 * @return bool
-	 */
-	protected function hasTrait($class) {
-		$traits = class_uses($class);
-		if (!isset($traits[$this->trait])) {
-			if ($this->recursive) {
-				foreach ($traits as $trait) {
-					return $this->hasTrait($trait);
-				}
-			}
-
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 
 }

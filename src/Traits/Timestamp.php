@@ -1,6 +1,6 @@
 <?php
 
-namespace Thunbolt\Doctrine;
+namespace Thunbolt\Doctrine\Traits;
 
 use DateTime;
 
@@ -12,6 +12,9 @@ trait Timestamp {
 	/** @var DateTime */
 	protected $updated;
 
+	/**
+	 * @internal
+	 */
 	public function updateTimestamp() {
 		if ($this->created === NULL) {
 			$this->created = new DateTime();
@@ -33,7 +36,7 @@ trait Timestamp {
 	 * @param DateTime $created
 	 * @return self
 	 */
-	public function setCreated($created) {
+	public function setCreated(DateTime $created) {
 		$this->created = $created;
 
 		return $this;
@@ -52,7 +55,7 @@ trait Timestamp {
 	 * @param DateTime $updated
 	 * @return self
 	 */
-	public function setUpdated($updated) {
+	public function setUpdated(DateTime $updated) {
 		$this->updated = $updated;
 
 		return $this;
