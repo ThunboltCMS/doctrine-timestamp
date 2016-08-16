@@ -41,13 +41,15 @@ class TimestampExtension extends CompilerExtension {
 	public function loadConfiguration() {
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
-		if (!trait_exists($config['trait'])) {
-			throw new TimestampException("Trait $config[trait] not exists.");
+		foreach ($config['traits'] as $trait) {
+			if (!trait_exists($trait)) {
+				throw new TimestampException("Trait '$trait' not exists.");
+			}
 		}
 
 		$builder->addDefinition($this->prefix('subscriber'))
 			->setClass($config['subscriber'], [
-				[$config['updateField'], $config['createField']],
+				$config['fields'],
 				$config['traits'],
 				$config['methods'],
 				$config['events'],
