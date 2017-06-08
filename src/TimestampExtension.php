@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Thunbolt\Doctrine\DI;
 
 use Doctrine\ORM\EntityManager;
@@ -38,7 +40,7 @@ class TimestampExtension extends CompilerExtension {
 		]
 	];
 	
-	public function loadConfiguration() {
+	public function loadConfiguration(): void {
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
 		foreach ($config['traits'] as $trait) {
@@ -56,7 +58,7 @@ class TimestampExtension extends CompilerExtension {
 			]);
 	}
 
-	public function beforeCompile() {
+	public function beforeCompile(): void {
 		$builder = $this->getContainerBuilder();
 
 		$service = $builder->getByType(EntityManager::class);

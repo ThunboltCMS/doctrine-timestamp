@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Thunbolt\Doctrine;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
@@ -34,7 +36,7 @@ class TimestampSubscriber {
 	/**
 	 * @param LoadClassMetadataEventArgs $args
 	 */
-	public function loadClassMetadata(LoadClassMetadataEventArgs $args) {
+	public function loadClassMetadata(LoadClassMetadataEventArgs $args): void {
 		$metadata = $args->getClassMetadata();
 		$metadataTraits = class_uses($metadata->getName());
 
