@@ -3,9 +3,12 @@
 	"type": "library",
 	"require": {
 		"php": ">= 5.6",
-		"nette/di": "^2.3"
+		"nette/di": "^2.3 || ^3.0"
 	},
 	"autoload": {
 		"classmap": ["src/"]
+	},
+	"require-dev": {
+		"kdyby/doctrine": "^3.2"
 	}
 }
