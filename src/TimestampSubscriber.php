@@ -47,11 +47,11 @@ class TimestampSubscriber {
 				}
 				foreach ($this->fields[$category] as $field) {
 					if (!$metadata->hasField($field)) {
-						$metadata->mapField(array(
+						$metadata->mapField([
 							'fieldName' => $field,
 							'type' => 'datetime',
-							'nullable' => TRUE,
-						));
+							'nullable' => true,
+						]);
 					}
 				}
 			}

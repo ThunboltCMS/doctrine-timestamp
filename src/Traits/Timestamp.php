@@ -22,7 +22,7 @@ trait Timestamp {
 	 * @internal
 	 */
 	public function updateTimestamp(): void {
-		if ($this->created === NULL) {
+		if ($this->created === null) {
 			$this->created = new DateTime();
 		}
 

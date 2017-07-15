@@ -18,7 +18,7 @@ trait TimestampCreated {
 	 * @internal
 	 */
 	public function updateCreated(): void {
-		if ($this->created === NULL) {
+		if ($this->created === null) {
 			$this->created = new \DateTime();
 		}
 	}
