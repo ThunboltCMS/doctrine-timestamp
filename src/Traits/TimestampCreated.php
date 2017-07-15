@@ -6,6 +6,9 @@ namespace Thunbolt\Doctrine\Traits;
 
 use DateTime;
 
+/**
+ * @property-read \DateTime $created
+ */
 trait TimestampCreated {
 
 	/** @var \DateTime */
@@ -27,16 +30,6 @@ trait TimestampCreated {
 	 */
 	public function getCreated(): DateTime {
 		return $this->created;
-	}
-
-	/**
-	 * @param DateTime $created
-	 * @return self
-	 */
-	public function setCreated(DateTime $created) {
-		$this->created = $created;
-
-		return $this;
 	}
 
 }

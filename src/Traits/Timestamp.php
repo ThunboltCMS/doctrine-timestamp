@@ -6,6 +6,10 @@ namespace Thunbolt\Doctrine\Traits;
 
 use DateTime;
 
+/**
+ * @property-read \DateTime $created
+ * @property-read \DateTime $updated
+ */
 trait Timestamp {
 
 	/** @var DateTime */
@@ -35,32 +39,10 @@ trait Timestamp {
 	}
 
 	/**
-	 * @param DateTime $created
-	 * @return static
-	 */
-	public function setCreated(DateTime $created) {
-		$this->created = $created;
-
-		return $this;
-	}
-
-	/////////////////////////////////////////////////////////////////
-
-	/**
 	 * @return DateTime
 	 */
 	public function getUpdated(): DateTime {
 		return $this->updated;
-	}
-
-	/**
-	 * @param DateTime $updated
-	 * @return self
-	 */
-	public function setUpdated(DateTime $updated) {
-		$this->updated = $updated;
-
-		return $this;
 	}
 
 }

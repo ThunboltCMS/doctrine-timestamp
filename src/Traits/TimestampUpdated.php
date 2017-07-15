@@ -6,6 +6,9 @@ namespace Thunbolt\Doctrine\Traits;
 
 use DateTime;
 
+/**
+ * @property-read \DateTime $updated
+ */
 trait TimestampUpdated {
 
 	/** @var DateTime */
@@ -25,16 +28,6 @@ trait TimestampUpdated {
 	 */
 	public function getUpdated(): DateTime {
 		return $this->updated;
-	}
-
-	/**
-	 * @param DateTime $updated
-	 * @return self
-	 */
-	public function setUpdated(DateTime $updated) {
-		$this->updated = $updated;
-
-		return $this;
 	}
 
 }
