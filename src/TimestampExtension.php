@@ -39,7 +39,7 @@ class TimestampExtension extends CompilerExtension {
 			'updated' => [Events::preUpdate, Events::prePersist],
 		]
 	];
-	
+
 	public function loadConfiguration(): void {
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
@@ -61,12 +61,17 @@ class TimestampExtension extends CompilerExtension {
 	public function beforeCompile(): void {
 		$builder = $this->getContainerBuilder();
 
-		$service = $builder->getByType(EntityManager::class);
-		if (!$service) {
+		$services = $builder->findByType(EntityManager::class);
+		if (!$services) {
 			throw new TimestampException('Class ' . EntityManager::class . ' not found in DIC.');
 		}
-		$builder->getDefinition($service)
-			->addSetup('?->getEventManager()->addEventListener(?, ?)', ['@self', Events::loadClassMetadata, $this->prefix('@subscriber')]);
+		foreach ($services as $service) {
+			$service->addSetup('?->getEventManager()->addEventListener(?, ?)', [
+				'@self',
+				Events::loadClassMetadata,
+				$this->prefix('@subscriber')
+			]);
+		}
 	}
 
 }
