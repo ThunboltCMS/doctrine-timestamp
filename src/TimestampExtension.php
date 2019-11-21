@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Thunbolt\Doctrine\DI;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Nette\DI\CompilerExtension;
 use Thunbolt\Doctrine\Traits\Timestamp;
@@ -50,7 +50,7 @@ class TimestampExtension extends CompilerExtension {
 		}
 
 		$builder->addDefinition($this->prefix('subscriber'))
-			->setClass($config['subscriber'], [
+			->setFactory($config['subscriber'], [
 				$config['fields'],
 				$config['traits'],
 				$config['methods'],
@@ -61,9 +61,9 @@ class TimestampExtension extends CompilerExtension {
 	public function beforeCompile(): void {
 		$builder = $this->getContainerBuilder();
 
-		$services = $builder->findByType(EntityManager::class);
+		$services = $builder->findByType(EntityManagerInterface::class);
 		if (!$services) {
-			throw new TimestampException('Class ' . EntityManager::class . ' not found in DIC.');
+			throw new TimestampException('Class ' . EntityManagerInterface::class . ' not found in DIC.');
 		}
 		foreach ($services as $service) {
 			$service->addSetup('?->getEventManager()->addEventListener(?, ?)', [
